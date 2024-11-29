@@ -1,0 +1,213 @@
+/* Règles générales */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5; /* Couleur de fond de la page */
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Assure que la hauteur du corps couvre toute la fenêtre */
+}
+
+/* En-tête (header) */
+header {
+    background-color: #0056b3; /* Bleu */
+    color: white;
+    padding: 15px 0;
+    text-align: center;
+}
+
+header .header-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header .logo {
+    width: 100px; /* Taille du logo */
+    height: auto;
+    margin-bottom: 10px;
+}
+
+header h1 {
+    font-size: 2em;
+    margin: 0;
+}
+
+/* Contenu principal */
+main {
+    flex: 1; /* Prend toute la place disponible entre le header et le footer */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Conteneur pour le scanner */
+.scanner-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border: 2px solid #0056b3; /* Bordure bleue */
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: auto;
+}
+
+/* Carreau de la caméra (plus grand) */
+.camera-view {
+    width: 400px; /* Largeur de la caméra */
+    height: 400px; /* Hauteur de la caméra */
+    border: 4px solid #0056b3; /* Bordure bleue */
+    border-radius: 8px; /* Coins arrondis */
+    margin: 20px 0;
+    background: black;
+    position: relative;
+    overflow: hidden; /* Masque le contenu qui dépasse */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Style de la vidéo */
+.camera-view video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%; /* Remplit complètement la largeur du carré */
+    height: 100%; /* Remplit complètement la hauteur du carré */
+    object-fit: cover; /* Assure que la vidéo remplit le cadre sans déformation */
+}
+
+/* Messages en-dessous de la caméra */
+.scan-message {
+    font-size: 1.1em;
+    color: #555;
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* Boutons */
+button {
+    background-color: #28a745; /* Vert */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+    margin-top: 15px;
+}
+
+button:hover {
+    background-color: #218838; /* Vert foncé au survol */
+}
+
+/* Pied de page */
+footer {
+    background-color: #0056b3; /* Bleu */
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    margin-top: auto; /* Place automatiquement le footer en bas */
+    width: 100%;
+}
+
+/* Pied de page - Texte */
+footer p {
+    margin: 0;
+    font-size: 0.9em;
+}
+
+/* Styles pour les messages de bienvenue et bas de page */
+.welcome-message, .footer-message {
+    text-align: center;
+    color: #0056b3; /* Bleu pour les messages importants */
+    font-size: 1.2em;
+    margin: 10px 0;
+}
+
+/* Styles supplémentaires pour la page de validation */
+.validation-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: #e8f5e9; /* Couleur de fond verte pâle */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: auto;
+}
+
+.validation-message {
+    font-size: 1.2em;
+    color: #2e7d32; /* Vert pour le message de validation */
+    margin-bottom: 15px;
+}
+
+.validation-button {
+    background-color: #28a745; /* Vert */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+.validation-button:hover {
+    background-color: #218838; /* Vert foncé au survol */
+}
+
+/* Styles supplémentaires pour la page d'erreur */
+.error-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: #f9c2c1; /* Couleur de fond rouge pâle */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: auto;
+}
+
+.error-message {
+    font-size: 1.2em;
+    color: #d32f2f; /* Rouge pour le message d'erreur */
+    margin-bottom: 15px;
+}
+
+.error-button {
+    background-color: #d32f2f; /* Rouge */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+.error-button:hover {
+    background-color: #c2185b; /* Rouge foncé au survol */
+}
+
+
+
+
+
+
+
+

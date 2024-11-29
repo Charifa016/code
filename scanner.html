@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scanner QR Code - Présence Étudiant</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <header>
+        <div class="header-container">
+            <img src="images/logo.png" alt="Logo ESI" class="logo">
+            <h1>Scanner le code QR</h1>
+        </div>
+    </header>
+
+    <main>
+        <div class="scanner-container">
+            <div class="camera-frame">
+                <video id="video" autoplay playsinline></video>
+            </div>
+            <div class="scan-message">Placez le code QR dans le cadre pour scanner.</div>
+            <div id="status-message" class="status-message"></div>
+
+            <!-- Tableau pour afficher les étudiants et leur présence -->
+            <table id="students-table">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Classe</th>
+                        <th>Email</th>
+                        <th>Présence</th>
+                    </tr>
+                </thead>
+                <tbody id="students-table-body">
+                    <!-- Les données des étudiants seront injectées ici -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer>
+        <p>Créé par l'École des Sciences de l'Information 2024</p>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js";
+        import { getFirestore, collection, query, where, getDocs, updateDoc, serverTimestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js";
+        import QrScanner from "https://unpkg.com/qr-scanner/qr-scanner.min.js";
+
+        // Configuration Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCF5z-5xGCsg-_oiYPrv2rQSH1csqzvDvA",
+            authDomain: "deskup-49447.firebaseapp.com",
+            projectId: "deskup-49447",
+            storageBucket: "deskup-49447.appspot.com",
+            messagingSenderId: "1093589914553",
+            appId: "1:1093589914553:web:519bcc2b2c850065465c68",
+            measurementId: "G-V6SWVZQSC4"
+        };
+
+        // Initialisation Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function startCamera() {
+            try {
+                const video = document.getElementById("video");
+
+                // Accéder à la caméra
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+                video.srcObject = stream;
+
+                // Initialiser QrScanner
+                const qrScanner = new QrScanner(video, async (result) => {
+                    const resultData = result?.data?.trim();
+                    if (resultData) {
+                        console.log('QR Code détecté:', resultData);
+                        await checkPresence(resultData);
+                    } else {
+                        console.warn("Le QR Code est illisible ou mal formé.");
+                    }
+                }, { returnDetailedScanResult: true });
+                qrScanner.start();
+            } catch (error) {
+                console.error("Erreur d'accès à la caméra :", error);
+                alert("Erreur d'accès à la caméra. Vérifiez vos permissions.");
+            }
+        }
+
+        // Vérification et mise à jour de la présence dans Firebase
+        async function checkPresence(studentName) {
+            try {
+                console.log("Recherche de l'étudiant :", studentName);
+                const q = query(collection(db, "etudiant"), where("nom", "==", studentName));
+                const querySnapshot = await getDocs(q);
+
+                if (!querySnapshot.empty) {
+                    querySnapshot.forEach(async (doc) => {
+                        const docData = doc.data();
+                        console.log("Étudiant trouvé dans la base de données:", docData);
+
+                        if (!docData.presence) {
+                            await updateDoc(doc.ref, {
+                                presence: true,
+                                date: serverTimestamp()
+                            });
+
+                            console.log(`Présence de ${studentName} mise à jour`);
+                            alert(`Présence de ${studentName} enregistrée avec succès !`);
+                        } else {
+                            console.log(`L'étudiant ${studentName} est déjà marqué comme présent.`);
+                            alert(`L'étudiant ${studentName} est déjà présent.`);
+                        }
+                    });
+                } else {
+                    console.log(`Aucun étudiant trouvé pour ${studentName}`);
+                    alert("Étudiant non trouvé dans la base de données.");
+                }
+            } catch (error) {
+                console.error("Erreur lors de la mise à jour :", error);
+                alert("Erreur lors de la vérification ou mise à jour.");
+            }
+        }
+
+        // Affichage en temps réel des étudiants et de leur présence
+        function displayStudents() {
+            const tableBody = document.getElementById("students-table-body");
+            const studentsRef = collection(db, "etudiant");
+
+            onSnapshot(studentsRef, (snapshot) => {
+                tableBody.innerHTML = '';
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${data.nom}</td>
+                        <td>${data.prenom}</td>
+                        <td>${data.classe}</td>
+                        <td>${data.email}</td>
+                        <td>${data.presence ? 'Présent' : 'Absent'}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            });
+        }
+
+        // Démarrer la caméra et afficher les étudiants en temps réel
+        startCamera();
+        displayStudents();
+    </script>
+</body>
+
+</html>
